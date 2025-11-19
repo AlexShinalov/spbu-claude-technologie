@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  producer:
+    build: ./app
+    restart: always
+    container_name: producer
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBIT_HOST: rabbitmq
+      EXCHANGE_NAME: tasks
+      ROUTING_KEY: encode
+    command: ["python", "producer.py"]
+
+  consumer:
+    build: ./app
+    restart: always
+    container_name: consumer
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBIT_HOST: rabbitmq
+      EXCHANGE_NAME: tasks
+      ROUTING_KEY: encode
+    command: ["python", "consumer.py"]
