@@ -5,7 +5,7 @@
 - `consumer.py ` - обрабротчик      
 - `producer.py` - отправитель     
 
-## How to start
+## How to starts
 
 ```docker compose build -up ```
 
